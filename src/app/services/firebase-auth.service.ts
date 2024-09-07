@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
-import { initializeApp } from 'firebase/app';
+import { doc, setDoc } from 'firebase/firestore';
 import { ToasterService } from './toaster.service';
-import { environment } from 'src/environments/environment';
+import { FirebaseService } from './firebase.service';
 import { LoginCredentials, SignUpData } from '../pages/login/login.model';
-import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
+import { FirebaseAuthentication, SignInResult } from '@capacitor-firebase/authentication';
 
 @Injectable({ providedIn: 'root' })
 export class FirebaseAuthService {
-  constructor(private toasterService: ToasterService) {}
-
-  public async initialize(): Promise<void> {
-    initializeApp(environment.firebase);
-  }
+  constructor(
+    private toasterService: ToasterService,
+    private firebaseService: FirebaseService,
+  ) {}
 
   async signIn({ email, password }: LoginCredentials) {
     const result = await FirebaseAuthentication.signInWithEmailAndPassword({
@@ -30,7 +29,8 @@ export class FirebaseAuthService {
   }
 
   async signInWithGoogle() {
-    const result = await FirebaseAuthentication.signInWithGoogle();
+    const result: SignInResult = await FirebaseAuthentication.signInWithGoogle();
+    await this.setUserData(result);
     return result.user;
   }
 
@@ -51,6 +51,24 @@ export class FirebaseAuthService {
         break;
       default:
         this.toasterService.toast('An error occurred during login. Please try again later.', 'failed');
+    }
+  }
+
+  private async setUserData(result: SignInResult) {
+    if (result.additionalUserInfo.isNewUser) {
+      const user = result.user;
+      try {
+        await setDoc(doc(this.firebaseService.fireStore, 'users', user.uid), {
+          uid: user.uid,
+          email: user.email,
+          photoUrl: user.photoUrl,
+          lastName: user.displayName.split(' ')[1],
+          firstName: user.displayName.split(' ')[0],
+          loginMethod: result.additionalUserInfo.providerId,
+        });
+      } catch (error) {
+        console.log('error: ', error);
+      }
     }
   }
 }

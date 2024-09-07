@@ -35,3 +35,23 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+@import 'theme/custom-toaster.scss';
+
+ion-button {
+  height: 46px;
+  --box-shadow: none;
+  --border-radius: 10px;
+  text-transform: unset;
+}
+
+ion-input,
+ion-textarea {
+  --border-radius: 10px !important;
+  --border-color: var(--ion-color-primary) !important;
+  --highlight-color-valid: var(--ion-color-primary) !important;
+  --highlight-color-invalid: var(--ion-color-primary) !important;
+}
+
+.disable-event {
+  pointer-events: none;
+}

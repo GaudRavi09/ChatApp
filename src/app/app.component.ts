@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
+import { FirebaseService } from './services/firebase.service';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
-import { FirebaseAuthService } from './services/firebase-auth.service';
 
 @Component({
   standalone: true,
@@ -9,11 +9,11 @@ import { FirebaseAuthService } from './services/firebase-auth.service';
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {
-  constructor(private readonly firebaseAuthService: FirebaseAuthService) {
+  constructor(private readonly firebaseService: FirebaseService) {
     this.initializeApp();
   }
 
   private async initializeApp(): Promise<void> {
-    await this.firebaseAuthService.initialize();
+    await this.firebaseService.initialize();
   }
 }

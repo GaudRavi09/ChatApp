@@ -61,6 +61,7 @@ export class LoginPage implements OnInit {
     try {
       this.isLoading = true;
       await this.firebaseAuthService.signInWithGoogle();
+      this.navCtrl.navigateForward('/dashboard', { replaceUrl: true });
       this.isLoading = false;
     } catch (error: any) {
       this.isLoading = false;
