@@ -7,11 +7,7 @@ import { ToastController } from '@ionic/angular/standalone';
 export class ToasterService {
   constructor(private toastController: ToastController) {}
 
-  async toast(
-    message: string,
-    type: 'success' | 'warning' | 'failed',
-    duration: number = 2000
-  ) {
+  async toast(message: string, type: 'success' | 'warning' | 'failed', duration: number = 2000) {
     const iconMap = {
       warning: 'warning',
       failed: 'close-circle',

@@ -3,9 +3,9 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { FirebaseAuthService } from './services/firebase-auth.service';
 
 @Component({
+  standalone: true,
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  standalone: true,
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {

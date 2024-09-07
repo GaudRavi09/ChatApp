@@ -1,0 +1,66 @@
+<ion-content class="ion-padding">
+  <div class="login-container">
+    <h2 class="ion-text-center">Sign In</h2>
+    <h5 class="ion-text-center">Login to continue your account</h5>
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <div class="ion-padding-bottom">
+        <!-- email input-->
+        <ion-input label="Email" formControlName="email" label-placement="floating" fill="outline" type="email" />
+
+        <!-- email error -->
+        @if(formSubmitted && loginForm.controls['email'].errors){
+        <ion-label color="danger">
+          * Please enter valid email !
+        </ion-label>
+        }
+      </div>
+
+      <div class="ion-padding-bottom">
+        <!-- password -->
+        <ion-input label="Password" formControlName="password" label-placement="floating" fill="outline"
+          [type]="showPassword ? 'text' : 'password'">
+          @if(loginForm.controls['password'].value){
+          <ion-button fill="clear" slot="end" aria-label="Show/hide" (click)="togglePassword()">
+            <ion-icon slot="icon-only" [name]="showPassword ? 'eye-off' : 'eye'" aria-hidden="true"></ion-icon>
+          </ion-button>
+          }
+        </ion-input>
+
+        <!-- password error -->
+        @if(formSubmitted && loginForm.controls['password'].errors){
+        <ion-label color="danger">
+          * Please enter 8 digit valid password !
+        </ion-label>
+        }
+      </div>
+
+      <!--  login button -->
+      <ion-button expand="block" type="submit" color="primary" [class.disable-event]="isLoading">
+        @if(isLoading){
+        <span class="ion-padding-start">
+          <ion-spinner name="crescent"></ion-spinner>
+        </span>
+        }@else {
+        Login
+        }
+      </ion-button>
+    </form>
+
+    <div class="separator">
+      <ion-label>OR</ion-label>
+    </div>
+
+    <!-- google login option -->
+    <ion-button expand="block" color="danger" (click)="signInWithGoogle()" [class.disable-event]="isLoading">
+
+      @if(isLoading){
+      <span class="ion-padding-start">
+        <ion-spinner name="crescent"></ion-spinner>
+      </span>
+      }@else {
+      <ion-icon slot="start" name="logo-google"></ion-icon>
+      Login with Google
+      }
+    </ion-button>
+  </div>
+</ion-content>
