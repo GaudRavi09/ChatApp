@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Chat</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" [scrollEvents]="true">
+  <!-- Message bubbles -->
+  <div class="message-container">
+    <div class="message-bubble sender">
+      <ion-text>Yes it's under review</ion-text>
+      <span class="timestamp">8:10 PM</span>
+    </div>
+
+    <div class="message-bubble receiver">
+      <ion-text>Ok</ion-text>
+      <span class="timestamp">8:10 PM</span>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-item>
+      <ion-input placeholder="Type a message..."></ion-input>
+      <ion-buttons>
+        <ion-button>
+          <ion-icon color="primary" slot="icon-only" name="send"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-toolbar>
+</ion-footer>

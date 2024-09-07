@@ -1,0 +1,50 @@
+.message-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.message-bubble {
+  margin: 10px;
+  padding: 10px;
+  max-width: 70%;
+  font-size: 16px;
+  line-height: 1.5;
+  border-radius: 15px;
+}
+
+.sender {
+  color: white;
+  align-self: flex-end;
+  background-color: #0b93f6;
+  border-bottom-right-radius: 0;
+}
+
+.receiver {
+  color: black;
+  align-self: flex-start;
+  background-color: #e5e5ea;
+  border-bottom-left-radius: 0;
+}
+
+.timestamp {
+  color: #888;
+  display: block;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+ion-input {
+  width: 100%;
+}
+
+ion-footer {
+  --background: #1e1e1e;
+}
+
+ion-toolbar {
+  --background: #1e1e1e;
+}
+
+ion-content {
+  --background: #121212;
+}

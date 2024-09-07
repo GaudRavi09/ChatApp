@@ -13,6 +13,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./pages/dashboard/dashboard.page').then((m) => m.DashboardPage),
   },
+  {
+    path: 'chat/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/chat/chat.page').then((m) => m.ChatPage),
+  },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' },
 ];
