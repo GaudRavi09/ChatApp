@@ -1,32 +1,58 @@
 <ion-header>
   <ion-toolbar>
+    <!-- Back button aligned on the left -->
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/dashboard"></ion-back-button>
     </ion-buttons>
-    <ion-title>Chat</ion-title>
+
+    <!-- Avatar and user name in the center -->
+    <ion-grid class="user-info-grid">
+      <ion-row class="ion-align-items-center">
+
+        <!-- other user image -->
+        <ion-col size="auto">
+          <ion-avatar>
+            <img [src]="otherUser?.photoUrl" alt="User Avatar" />
+          </ion-avatar>
+        </ion-col>
+
+        <!-- other user name -->
+        <ion-col>
+          <ion-label>
+            <h2>{{otherUser?.firstName || ""}} {{otherUser?.lastName || ""}}</h2>
+          </ion-label>
+        </ion-col>
+
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
 </ion-header>
+
 
 <ion-content class="ion-padding" [scrollEvents]="true">
   <!-- Message bubbles -->
   <div class="message-container">
+    @for (message of allMessages; track $index) {
+    @if (message.sender_id === currentUser.uid) {
     <div class="message-bubble sender">
-      <ion-text>Yes it's under review</ion-text>
-      <span class="timestamp">8:10 PM</span>
+      <ion-text>{{message.content}}</ion-text>
+      <span class="timestamp">{{message.sent_at | date: 'shortTime'}}</span>
     </div>
-
+    }@else {
     <div class="message-bubble receiver">
-      <ion-text>Ok</ion-text>
-      <span class="timestamp">8:10 PM</span>
+      <ion-text>{{message.content}}</ion-text>
+      <span class="timestamp">{{message.sent_at | date: 'shortTime'}}</span>
     </div>
+    }
+    }
   </div>
 </ion-content>
 
 <ion-footer>
   <ion-toolbar>
     <ion-item>
-      <ion-input placeholder="Type a message..."></ion-input>
-      <ion-buttons>
+      <ion-input [(ngModel)]="typedMessage" placeholder="Type a message..." (keyup.enter)="sendMessage()" />
+      <ion-buttons (click)="sendMessage()">
         <ion-button>
           <ion-icon color="primary" slot="icon-only" name="send"></ion-icon>
         </ion-button>

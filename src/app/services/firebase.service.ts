@@ -17,10 +17,12 @@ export class FirebaseService {
     FirebaseAuthentication.removeAllListeners().then(() => {
       FirebaseAuthentication.addListener('authStateChange', (change: AuthStateChange) => {
         this.ngZone.run(async () => {
-          const collectionRef = doc(this.fireStore, 'users', change.user.uid);
-          const querySnapshot = await getDoc(collectionRef);
-          const userData = querySnapshot.data() as UserData;
-          this.currentUserSubject.next(userData);
+          if (change?.user) {
+            const collectionRef = doc(this.fireStore, 'users', change.user.uid);
+            const querySnapshot = await getDoc(collectionRef);
+            const userData = querySnapshot.data() as UserData;
+            this.currentUserSubject.next(userData);
+          }
         });
       });
     });
