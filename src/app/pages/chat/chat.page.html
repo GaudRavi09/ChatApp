@@ -33,15 +33,15 @@
   <!-- Message bubbles -->
   <div class="message-container">
     @for (message of allMessages; track $index) {
-    @if (message.sender_id === currentUser.uid) {
+    @if (message.senderId === currentUser.uid) {
     <div class="message-bubble sender">
       <ion-text>{{message.content}}</ion-text>
-      <span class="timestamp">{{message.sent_at | date: 'shortTime'}}</span>
+      <span class="timestamp">{{message?.sentAt?.toMillis()| date: 'shortTime'}}</span>
     </div>
     }@else {
     <div class="message-bubble receiver">
       <ion-text>{{message.content}}</ion-text>
-      <span class="timestamp">{{message.sent_at | date: 'shortTime'}}</span>
+      <span class="timestamp">{{message?.sentAt?.toMillis()| date: 'shortTime'}}</span>
     </div>
     }
     }

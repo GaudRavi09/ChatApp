@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { FireStore } from '../enums/enums';
 import { doc, setDoc } from 'firebase/firestore';
 import { ToasterService } from './toaster.service';
 import { FirebaseService } from './firebase.service';
@@ -58,7 +59,7 @@ export class FirebaseAuthService {
     if (result.additionalUserInfo.isNewUser) {
       const user = result.user;
       try {
-        await setDoc(doc(this.firebaseService.fireStore, 'users', user.uid), {
+        await setDoc(doc(this.firebaseService.fireStore, FireStore.USERS, user.uid), {
           uid: user.uid,
           email: user.email,
           photoUrl: user.photoUrl,

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import { FireStore } from '../enums/enums';
 import { FirebaseService } from './firebase.service';
-import { doc, query, where, addDoc, getDocs, updateDoc, collection, arrayUnion } from 'firebase/firestore';
+import { query, where, addDoc, getDocs, collection, serverTimestamp } from 'firebase/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
@@ -11,12 +12,12 @@ export class ChatService {
     return new Promise(async (resolve, reject) => {
       try {
         // reference to the 'chats' collection in fireStore
-        const collectionRef = collection(this.firebaseService.fireStore, 'chats');
+        const collectionRef = collection(this.firebaseService.fireStore, FireStore.CHAT_ROOMS);
 
         // query to find existing 1v1 chats where the current user is a participant
         const collectionQuery = query(
           collectionRef,
-          where('chat_type', '==', '1v1'), // filter for 1-on-1 chat type
+          where('chatType', '==', '1v1'), // filter for 1-on-1 chat type
           where('participants', 'array-contains', currentUserId), // check if the current user is a participant
         );
 
@@ -38,12 +39,12 @@ export class ChatService {
         // if no existing chat is found, create a new 1v1 chat room
         if (!chatId) {
           const data = {
-            chat_type: '1v1', // set chat type to 1v1
-            created_at: Date.now(), // timestamp for when the chat was created
+            chatType: '1v1', // set chat type to 1v1
+            createdAt: serverTimestamp(), // timestamp for when the chat was created
             participants: [currentUserId, otherUserId], // both users as participants
             joiningData: [
-              { user: otherUserId, joined_at: Date.now() }, // track when the other user joined
-              { user: currentUserId, joined_at: Date.now() }, // track when the current user joined
+              { user: otherUserId, joinedAt: Date.now() }, // track when the other user joined
+              { user: currentUserId, joinedAt: Date.now() }, // track when the current user joined
             ],
           };
 
@@ -68,20 +69,16 @@ export class ChatService {
   async sendMessage(chatId: string, senderId: string, content: string): Promise<void> {
     try {
       // data structure for the message to be sent
-      const data = {
+      const messageData = {
+        chatId,
         content, // message content
         status: {}, // placeholder for message status (e.g., delivered, seen)
-        sender_id: senderId, // ID of the user sending the message
-        sent_at: Date.now(), // timestamp of when the message is sent
-        message_type: 'text', // type of message (here it's a text message)
+        senderId: senderId, // ID of the user sending the message
+        sentAt: serverTimestamp(), // timestamp of when the message is sent
+        messageType: 'text', // type of message (here it's a text message)
       };
 
-      // reference to the chat document in fireStore where the message will be added
-      const collectionRef = doc(this.firebaseService.fireStore, 'chats', chatId);
-
-      // update the 'messages' field by adding the new message using arrayUnion
-      // this ensures the new message is appended to the existing list of messages
-      await updateDoc(collectionRef, { messages: arrayUnion(data) });
+      await addDoc(collection(this.firebaseService.fireStore, FireStore.CHAT_MESSAGES), { ...messageData });
     } catch (error: any) {
       // log the error for debugging purposes
       console.error('Error sending message: ', error);

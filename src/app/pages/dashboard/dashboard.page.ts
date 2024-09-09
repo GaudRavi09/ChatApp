@@ -11,6 +11,7 @@ import {
   IonContent,
   NavController,
 } from '@ionic/angular/standalone';
+import { FireStore } from 'src/app/enums/enums';
 import { Component, OnInit } from '@angular/core';
 import { UserData } from 'src/app/models/UserData';
 import { collection, onSnapshot } from 'firebase/firestore';
@@ -38,7 +39,7 @@ export class DashboardPage implements OnInit {
   }
 
   getUsers() {
-    onSnapshot(collection(this.firebaseService.fireStore, 'users'), (querySnapshot) => {
+    onSnapshot(collection(this.firebaseService.fireStore, FireStore.USERS), (querySnapshot) => {
       const allUsers: UserData[] = querySnapshot.docs.map((doc) => doc.data() as UserData);
       this.users = allUsers.filter((user: UserData) => user.uid !== this.currentUser.uid);
     });

@@ -21,13 +21,14 @@ import { addIcons } from 'ionicons';
 import { send } from 'ionicons/icons';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FireStore } from 'src/app/enums/enums';
 import { ActivatedRoute } from '@angular/router';
+import { Messages } from 'src/app/models/Messages';
 import { UserData } from 'src/app/models/UserData';
 import { ChatService } from 'src/app/services/chat.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { FirebaseService } from 'src/app/services/firebase.service';
-import { Messages } from 'src/app/models/Messages';
+import { collection, doc, getDoc, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 
 @Component({
   standalone: true,
@@ -78,15 +79,13 @@ export class ChatPage implements OnInit {
   ngOnInit() {}
 
   async getUserData(userId: string) {
-    const collectionRef = doc(this.firebaseService.fireStore, 'users', userId);
+    const collectionRef = doc(this.firebaseService.fireStore, FireStore.USERS, userId);
     const querySnapshot = await getDoc(collectionRef);
     this.otherUser = querySnapshot.data() as UserData;
     this.currentUser = await this.firebaseService.getCurrentUser();
     this.chatId = await this.chatService.findOrCreateOneToOneChat(this.currentUser.uid, this.otherUser.uid);
     this.getMessages();
   }
-
-  async scrollToBottom() {}
 
   async sendMessage() {
     if (this.typedMessage) {
@@ -97,8 +96,14 @@ export class ChatPage implements OnInit {
   }
 
   getMessages() {
-    onSnapshot(doc(this.firebaseService.fireStore, 'chats', this.chatId), (querySnapshot) => {
-      this.allMessages = querySnapshot.data()['messages'];
+    const messageQuery = query(
+      collection(this.firebaseService.fireStore, FireStore.CHAT_MESSAGES),
+      where('chatId', '==', this.chatId),
+      orderBy('sentAt', 'asc'),
+    );
+
+    onSnapshot(messageQuery, (querySnapshot) => {
+      this.allMessages = querySnapshot.docs.map((d) => d.data() as Messages);
       if (this.hasFirstScroll) {
         setTimeout(() => {
           this.content.scrollToBottom();

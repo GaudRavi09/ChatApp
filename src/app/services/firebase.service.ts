@@ -1,3 +1,4 @@
+import { FireStore } from '../enums/enums';
 import { initializeApp } from 'firebase/app';
 import { Auth, getAuth } from 'firebase/auth';
 import { UserData } from '../models/UserData';
@@ -5,7 +6,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { lastValueFrom, Observable, ReplaySubject, take } from 'rxjs';
 import { doc, Firestore, getDoc, getFirestore } from 'firebase/firestore';
-import { AuthStateChange, FirebaseAuthentication, User } from '@capacitor-firebase/authentication';
+import { AuthStateChange, FirebaseAuthentication } from '@capacitor-firebase/authentication';
 
 @Injectable({ providedIn: 'root' })
 export class FirebaseService {
@@ -18,7 +19,7 @@ export class FirebaseService {
       FirebaseAuthentication.addListener('authStateChange', (change: AuthStateChange) => {
         this.ngZone.run(async () => {
           if (change?.user) {
-            const collectionRef = doc(this.fireStore, 'users', change.user.uid);
+            const collectionRef = doc(this.fireStore, FireStore.USERS, change.user.uid);
             const querySnapshot = await getDoc(collectionRef);
             const userData = querySnapshot.data() as UserData;
             this.currentUserSubject.next(userData);
