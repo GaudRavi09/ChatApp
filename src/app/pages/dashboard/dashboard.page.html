@@ -5,6 +5,22 @@
 </ion-header>
 
 <ion-content>
+  @if (isLoading) {
+  <ion-list lines="none">
+    @for (user of [1,2,3,4,5,6,7,8,9,10]; track $index) {
+    <ion-item>
+      <ion-avatar slot="start">
+        <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+      </ion-avatar>
+
+      <ion-label>
+        <h2><ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text></h2>
+        <p class="message-text"><ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text></p>
+      </ion-label>
+    </ion-item>
+    }
+  </ion-list>
+  }@else {
   <ion-list lines="none">
     @for (user of users; track $index) {
     <ion-item (click)="redirectToChat(user.uid)">
@@ -21,4 +37,5 @@
     </ion-item>
     }
   </ion-list>
+  }
 </ion-content>

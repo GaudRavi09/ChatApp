@@ -15,6 +15,7 @@ import {
   IonContent,
   IonToolbar,
   IonButtons,
+  IonSpinner,
   IonBackButton,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -52,6 +53,7 @@ import { collection, doc, getDoc, onSnapshot, orderBy, query, where } from 'fire
     IonContent,
     IonToolbar,
     IonButtons,
+    IonSpinner,
     FormsModule,
     CommonModule,
     IonBackButton,
@@ -61,8 +63,9 @@ export class ChatPage implements OnInit {
   chatId: string;
   otherUser: UserData;
   typedMessage: string;
-  allMessages: Messages[];
   currentUser: UserData;
+  allMessages: Messages[];
+  isLoading: boolean = true;
   hasFirstScroll: boolean = true;
   @ViewChild(IonContent) content: IonContent;
 
@@ -104,12 +107,15 @@ export class ChatPage implements OnInit {
 
     onSnapshot(messageQuery, (querySnapshot) => {
       this.allMessages = querySnapshot.docs.map((d) => d.data() as Messages);
-      if (this.hasFirstScroll) {
-        setTimeout(() => {
-          this.content.scrollToBottom();
-          this.hasFirstScroll = false;
-        }, 100);
-      }
+      setTimeout(() => {
+        this.isLoading = false;
+        if (this.hasFirstScroll) {
+          setTimeout(() => {
+            this.content.scrollToBottom();
+            this.hasFirstScroll = false;
+          }, 10);
+        }
+      }, 1000);
     });
   }
 }

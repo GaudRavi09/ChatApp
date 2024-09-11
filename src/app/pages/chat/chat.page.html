@@ -31,7 +31,13 @@
 
 <ion-content class="ion-padding" [scrollEvents]="true">
   <!-- Message bubbles -->
+  @if (isLoading) {
+  <div class="loading-screen">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  }@else {
   <div class="message-container">
+    @if (allMessages.length) {
     @for (message of allMessages; track $index) {
     @if (message.senderId === currentUser.uid) {
     <div class="message-bubble sender">
@@ -45,7 +51,14 @@
     </div>
     }
     }
+    }@else {
+    <div class="empty-chat">
+      <img src="../../../assets/icon/message-regular.svg">
+      <h3>No chat available. Please send the first message to display here.</h3>
+    </div>
+    }
   </div>
+  }
 </ion-content>
 
 <ion-footer>

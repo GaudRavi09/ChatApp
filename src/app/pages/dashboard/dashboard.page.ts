@@ -10,6 +10,7 @@ import {
   IonToolbar,
   IonContent,
   NavController,
+  IonSkeletonText,
 } from '@ionic/angular/standalone';
 import { FireStore } from 'src/app/enums/enums';
 import { Component, OnInit } from '@angular/core';
@@ -22,11 +23,24 @@ import { FirebaseService } from 'src/app/services/firebase.service';
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
-  imports: [IonList, IonIcon, IonNote, IonItem, IonLabel, IonTitle, IonAvatar, IonHeader, IonToolbar, IonContent],
+  imports: [
+    IonList,
+    IonIcon,
+    IonNote,
+    IonItem,
+    IonLabel,
+    IonTitle,
+    IonAvatar,
+    IonHeader,
+    IonToolbar,
+    IonContent,
+    IonSkeletonText,
+  ],
 })
 export class DashboardPage implements OnInit {
   users: UserData[];
   currentUser: UserData;
+  isLoading: boolean = true;
 
   constructor(
     private navCtrl: NavController,
@@ -42,6 +56,7 @@ export class DashboardPage implements OnInit {
     onSnapshot(collection(this.firebaseService.fireStore, FireStore.USERS), (querySnapshot) => {
       const allUsers: UserData[] = querySnapshot.docs.map((doc) => doc.data() as UserData);
       this.users = allUsers.filter((user: UserData) => user.uid !== this.currentUser.uid);
+      this.isLoading = false;
     });
   }
 
