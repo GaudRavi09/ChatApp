@@ -12,9 +12,10 @@ ion-note {
   font-size: 12px;
 }
 
-ion-item {
-  --background: #1e1e1e;
-  color: white;
+ion-item,
+ion-list {
+  background: transparent;
+  --background: transparent;
 }
 
 ion-label h2 {

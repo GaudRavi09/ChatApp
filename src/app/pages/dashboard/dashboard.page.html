@@ -1,6 +1,12 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>User List</ion-title>
+    <ion-title>Chats</ion-title>
+    <ion-buttons slot="end">
+      <!-- More Options button -->
+      <ion-button>
+        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -20,8 +26,11 @@
     </ion-item>
     }
   </ion-list>
+
   }@else {
-  <ion-list lines="none">
+
+  <ion-searchbar mode="ios" placeholder="Search" [debounce]="500" (ionInput)="handleInput($event)" />
+  <ion-list>
     @for (user of users; track $index) {
     <ion-item (click)="redirectToChat(user.uid)">
       <ion-avatar slot="start">

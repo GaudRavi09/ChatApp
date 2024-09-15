@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FireStore } from '../enums/enums';
+import { ChatRoom } from '../models/ChatRoom';
 import { FirebaseService } from './firebase.service';
 import { query, where, addDoc, getDocs, collection, serverTimestamp } from 'firebase/firestore';
 
@@ -38,13 +39,13 @@ export class ChatService {
 
         // if no existing chat is found, create a new 1v1 chat room
         if (!chatId) {
-          const data = {
+          const data: ChatRoom = {
             chatType: '1v1', // set chat type to 1v1
             createdAt: serverTimestamp(), // timestamp for when the chat was created
             participants: [currentUserId, otherUserId], // both users as participants
             joiningData: [
-              { user: otherUserId, joinedAt: Date.now() }, // track when the other user joined
-              { user: currentUserId, joinedAt: Date.now() }, // track when the current user joined
+              { userId: otherUserId, joinedAt: Date.now() }, // track when the other user joined
+              { userId: currentUserId, joinedAt: Date.now() }, // track when the current user joined
             ],
           };
 
@@ -61,6 +62,34 @@ export class ChatService {
         console.error('Error finding or creating 1v1 chat: ', error);
         // reject the promise with the error message
         reject(`Failed to find or create chat: ${error.message}`);
+      }
+    });
+  }
+
+  createGroupChat(creatorId: string, groupName: string, initialMembers: string[]): Promise<boolean> {
+    return new Promise(async (resolve, reject) => {
+      const newChatRoomData: ChatRoom = {
+        groupName,
+        chatType: 'group',
+        admins: [creatorId],
+        createdAt: serverTimestamp(),
+        participants: initialMembers,
+        joiningData: [
+          { userId: creatorId, joinedAt: Date.now(), role: 'admin' },
+          ...initialMembers.map((userId) => ({
+            userId: userId,
+            joinedAt: Date.now(),
+            role: 'member' as any,
+          })),
+        ],
+      };
+
+      try {
+        const collectionRef = collection(this.firebaseService.fireStore, FireStore.CHAT_ROOMS);
+        await addDoc(collectionRef, newChatRoomData);
+        resolve(true);
+      } catch (error) {
+        reject(error);
       }
     });
   }

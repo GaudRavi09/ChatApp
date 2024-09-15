@@ -9,11 +9,16 @@ import {
   IonHeader,
   IonToolbar,
   IonContent,
+  IonButton,
+  IonButtons,
+  IonSearchbar,
   NavController,
   IonSkeletonText,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
 import { FireStore } from 'src/app/enums/enums';
 import { Component, OnInit } from '@angular/core';
+import { ellipsisVertical } from 'ionicons/icons';
 import { UserData } from 'src/app/models/UserData';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { FirebaseService } from 'src/app/services/firebase.service';
@@ -30,10 +35,13 @@ import { FirebaseService } from 'src/app/services/firebase.service';
     IonItem,
     IonLabel,
     IonTitle,
+    IonButton,
     IonAvatar,
     IonHeader,
     IonToolbar,
+    IonButtons,
     IonContent,
+    IonSearchbar,
     IonSkeletonText,
   ],
 })
@@ -45,7 +53,9 @@ export class DashboardPage implements OnInit {
   constructor(
     private navCtrl: NavController,
     private firebaseService: FirebaseService,
-  ) {}
+  ) {
+    addIcons({ ellipsisVertical });
+  }
 
   async ngOnInit() {
     this.currentUser = await this.firebaseService.getCurrentUser();
@@ -62,5 +72,10 @@ export class DashboardPage implements OnInit {
 
   redirectToChat(userId: string) {
     this.navCtrl.navigateForward(`chat/${userId}`);
+  }
+
+  handleInput(event: any) {
+    const query = event.target.value.toLowerCase();
+    console.log('query: ', query);
   }
 }
