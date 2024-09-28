@@ -14,7 +14,7 @@ jobs:
 
       # Set environment variables from GitHub Secrets
       - name: Set Firebase Environment Variables
-        run:
+        env:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
