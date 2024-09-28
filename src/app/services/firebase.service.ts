@@ -38,7 +38,7 @@ export class FirebaseService {
   }
 
   public async initialize(): Promise<void> {
-    const app = initializeApp(environment.firebase);
+    const app = initializeApp(environment.firebaseConfig);
     this.firebaseAuth = getAuth(app);
     this.fireStore = getFirestore(app);
   }
