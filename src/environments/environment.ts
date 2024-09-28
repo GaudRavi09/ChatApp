@@ -13,6 +13,7 @@ export const environment = {
     storageBucket: process.env['FIREBASE_STORAGE_BUCKET'],
     messagingSenderId: process.env['FIREBASE_MESSAGING_SENDER_ID'],
   },
+  demo: process.env['FIREBASE_SERVICE_ACCOUNT_GAUDRAVI_CHATAPP'],
 };
 
 /*

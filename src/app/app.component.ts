@@ -15,6 +15,7 @@ export class AppComponent {
   }
 
   private async initializeApp(): Promise<void> {
+    console.log(environment.demo);
     console.log(environment.firebaseConfig);
     await this.firebaseService.initialize();
   }
